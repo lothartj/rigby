@@ -1,0 +1,61 @@
+"""Display components for whitespace package."""
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+DRAGON_ASCII = """
+                       .,,uod8B8bou,,.
+              ..,uod8BBBBBBBBBBBBBBBBRPFT?l!i:.
+         ,=m8BBBBBBBBBBBBBBBRPFT?!||||||||||||||
+         !...:!TVBBBRPFT||||||||||!!^^""'   ||||
+         !.......:!?|||||!!^^""'            ||||
+         !.........||||                     ||||
+         !.........||||  ##                 ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         `.........||||                    ,||||
+          .;.......||||               _.-!!|||||
+   .,uodWBBBBb.....||||       _.-!!|||||||||!:'
+!YBBBBBBBBBBBBBBb..!|||:..-!!|||||||!iof68BBBBBb....
+!..YBBBBBBBBBBBBBBb!!||||||||!iof68BBBBBBRPFT?!::   `.
+!....YBBBBBBBBBBBBBBbaaitf68BBBBBBRPFT?!:::::::::     `.
+!......YBBBBBBBBBBBBBBBBBBBRPFT?!::::::;:!^"`;:::       `.
+!........YBBBBBBBBBBRPFT?!::::::::::^''...::::::;         iBBbo.
+`..........YBRPFT?!::::::::::::::::::::::::;iof68bo.      WBBBBbo.
+  `..........:::::::::::::::::::::::;iof688888888888b.     `YBBBP^'
+    `........::::::::::::::::;iof688888888888888888888b.     `
+      `......:::::::::;iof688888888888888888888888888888b.
+        `....:::;iof688888888888888888888888888888888899fT!
+          `..::!8888888888888888888888888888888899fT|!^"'
+            `' !!988888888888888888888888899fT|!^"'
+                `!!8888888888888888899fT|!^"'
+                  `!988888888899fT|!^"'
+                    `!9899fT|!^"'
+                      `!^"'"""
+SIGN_OFF = (
+    "[bright_white italic]authored by[/] [bold cyan]Lothar Tjipueja[/]  "
+    "[dim]–[/] [link=https://github.com/lothartj]github.com/lothartj[/]"
+)
+console = Console()
+def show_installation_complete():
+    """Show a colorful installation complete message."""
+    console.print()
+    console.print(Panel(
+        Text(DRAGON_ASCII, style="bold blue"),
+        title="[bold green]Whitespace Installed Successfully![/]",
+        subtitle=SIGN_OFF,
+        border_style="green",
+    ))
+    console.print()
+def show_cleaning_complete(cleaned_files: list[str]):
+    """Show a colorful completion message with cleaned files."""
+    console.print()
+    files_text = "\n".join([f"[green]✓[/] [cyan]{file}[/]" for file in cleaned_files])
+    console.print(Panel(
+        f"[bold green]Cleaning Complete![/]\n\n{files_text}",
+        title="[bold blue]Whitespace Cleaner[/]",
+        subtitle=SIGN_OFF,
+        border_style="blue",
+    ))
+    console.print()
