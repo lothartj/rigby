@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling", "pip>=21.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rigby"
+version = "0.1.2"
+authors = [
+  { name="Lothar Tjipueja", email="lotharwebdev@gmail.com" },
+]
+description = "A tool to remove empty lines and clean up rigby in Python files"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "click>=8.0.0",
+    "loguru>=0.7.0",
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.0.0",
+    "rich>=13.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/lothartj/rigby"
+Issues = "https://github.com/lothartj/rigby/issues"
+
+[project.scripts]
+rigby = "rigby.cli:main"
+
+[tool.ruff]
+line-length = 88
+
+[tool.hatch.build]
+include = [
+    "rigby/**/*.py",
+    "README.md",
+    "LICENSE",
+]
