@@ -1,4 +1,5 @@
 """Command line interface for whitespace."""
+import os
 import sys
 from pathlib import Path
 from typing import List
@@ -25,18 +26,24 @@ def run(paths: List[str]):
     if not paths:
         console.print("[red]Please provide at least one file or directory path[/]", err=True)
         sys.exit(1)
+    # Get the current working directory
+    cwd = Path.cwd()
     cleaned_files = []
     for path in paths:
-        path = Path(path)
-        if path.is_file() and path.suffix == '.py':
-            console.print(f"[yellow]Cleaning[/] [cyan]{path}[/]")
+        # Convert to absolute path from current working directory
+        abs_path = cwd / path
+        if abs_path.is_file() and abs_path.suffix == '.py':
+            console.print(f"[yellow]Cleaning[/] [cyan]{abs_path}[/]")
             try:
-                clean_file(path)
-                cleaned_files.append(str(path))
+                clean_file(abs_path)
+                cleaned_files.append(str(abs_path))
             except Exception as e:
-                console.print(f"[red]Error processing {path}: {e}[/]", err=True)
-        elif path.is_dir():
-            for py_file in path.rglob('*.py'):
+                console.print(f"[red]Error processing {abs_path}: {e}[/]", err=True)
+        elif abs_path.is_dir():
+            for py_file in abs_path.rglob('*.py'):
+                # Skip files in the whitespace package directory
+                if 'site-packages/whitespace' in str(py_file):
+                    continue
                 console.print(f"[yellow]Cleaning[/] [cyan]{py_file}[/]")
                 try:
                     clean_file(py_file)
@@ -44,10 +51,11 @@ def run(paths: List[str]):
                 except Exception as e:
                     console.print(f"[red]Error processing {py_file}: {e}[/]", err=True)
         else:
-            console.print(f"[yellow]Skipping {path} - not a Python file or directory[/]", err=True)
-
+            console.print(f"[yellow]Skipping {abs_path} - not a Python file or directory[/]", err=True)
     if cleaned_files:
-        show_cleaning_complete(cleaned_files)
+        # Make paths relative for display
+        relative_paths = [str(Path(f).relative_to(cwd)) for f in cleaned_files]
+        show_cleaning_complete(relative_paths)
     else:
         console.print("[yellow]No Python files were cleaned.[/]")
 

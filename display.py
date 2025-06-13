@@ -2,36 +2,41 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
+
 DRAGON_ASCII = """
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⡾⠃⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣾⠋⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠻⢿⣷⣄⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡾⢛⣿⣿⣶⣄⠙⠿⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡟⢀⣾⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡿⢀⣾⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⡇⣼⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣷⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣿⣿⣿⣿⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⢀⣤⣾⣿⣿⣿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⣠⣶⡿⠿⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                 /\\    .-\" /
+                /  ; .'  .'
+               :   :/  .'
+                \\  ;-.'
+       .--\"\"\"\"--./_.'
+     .'          './
+    /  .----.      \\
+   |  :      \\      |
+   \\  :       \\    /
+    \\  '-.__.-'   /
+     '-.._____..'
+
+   WHITESPACE CLEANER
 """
+
 SIGN_OFF = (
     "[bright_white italic]authored by[/] [bold cyan]Lothar Tjipueja[/]  "
     "[dim]–[/] [link=https://github.com/lothartj]github.com/lothartj[/]"
 )
+
 console = Console()
+
 def show_installation_complete():
     """Show a colorful installation complete message."""
     console.print()
     console.print(Panel(
-        Text(DRAGON_ASCII, style="bold blue"),
+        Text(DRAGON_ASCII, style="bold magenta"),
         title="[bold green]Whitespace Installed Successfully![/]",
         subtitle=SIGN_OFF,
         border_style="green",
     ))
     console.print()
+
 def show_cleaning_complete(cleaned_files: list[str]):
     """Show a colorful completion message with cleaned files."""
     console.print()
