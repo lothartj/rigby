@@ -1,64 +1,112 @@
 """Command line interface for rigby."""
-import os
+
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 import click
 from rich.console import Console
-from .core import clean_file
-from .display import show_cleaning_complete
-
+from rich.panel import Panel
+from .core import clean_file, clean_source
+from .config import RigbyConfig
 console = Console()
-
 @click.group()
+@click.version_option()
 def cli():
-    """rigby - Clean up empty lines in Python files."""
+    """Rigby - A Python code formatter focused on empty line management."""
     pass
-
 @cli.command()
 @click.argument('paths', nargs=-1, type=click.Path(exists=True))
-def run(paths: List[str]):
-    """Clean Python files by removing unnecessary empty lines within functions.
-    Example usage:
-        rigby run file.py    # Clean a single file
-        rigby run .          # Clean all Python files in current directory
-    """
+@click.option('--config', type=click.Path(exists=True, dir_okay=False),
+              help='Path to configuration file')
+@click.option('--check', is_flag=True,
+              help='Check if files would be reformatted without making changes')
+@click.option('--diff', is_flag=True,
+              help='Show diff of changes without applying them')
+@click.option('--verbose', '-v', is_flag=True,
+              help='Show detailed output')
+@click.option('--quiet', '-q', is_flag=True,
+              help='Suppress all output except errors')
+def run(paths: List[str], config: Optional[str], check: bool,
+        diff: bool, verbose: bool, quiet: bool):
+    """Clean Python files by managing empty lines."""
     if not paths:
-        console.print("[red]Please provide at least one file or directory path[/]", err=True)
-        sys.exit(1)
-    # Get the current working directory
-    cwd = Path.cwd()
-    cleaned_files = []
+        console.print("[yellow]No paths provided. Using current directory.[/]")
+        paths = ["."]
+    config_obj = RigbyConfig.from_file(Path(config) if config else None)
+    modified_files = []
+    error_files = []
     for path in paths:
-        # Convert to absolute path from current working directory
-        abs_path = cwd / path
-        if abs_path.is_file() and abs_path.suffix == '.py':
-            console.print(f"[yellow]Cleaning[/] [cyan]{abs_path}[/]")
-            try:
-                clean_file(abs_path)
-                cleaned_files.append(str(abs_path))
-            except Exception as e:
-                console.print(f"[red]Error processing {abs_path}: {e}[/]", err=True)
-        elif abs_path.is_dir():
-            for py_file in abs_path.rglob('*.py'):
-                # Skip files in the rigby package directory
-                if 'site-packages/rigby' in str(py_file):
-                    continue
-                console.print(f"[yellow]Cleaning[/] [cyan]{py_file}[/]")
-                try:
-                    clean_file(py_file)
-                    cleaned_files.append(str(py_file))
-                except Exception as e:
-                    console.print(f"[red]Error processing {py_file}: {e}[/]", err=True)
+        path = Path(path)
+        if path.is_dir():
+            python_files = path.rglob("*.py")
         else:
-            console.print(f"[yellow]Skipping {abs_path} - not a Python file or directory[/]", err=True)
-    if cleaned_files:
-        # Make paths relative for display
-        relative_paths = [str(Path(f).relative_to(cwd)) for f in cleaned_files]
-        show_cleaning_complete(relative_paths)
-    else:
-        console.print("[yellow]No Python files were cleaned.[/]")
+            python_files = [path]
+        for file in python_files:
+            try:
+                if verbose and not quiet:
+                    console.print(f"Processing {file}...")
+                with open(file, 'r', encoding='utf-8') as f:
+                    original = f.read()
+                cleaned = clean_source(original, config_obj)
+                if original != cleaned:
+                    modified_files.append(file)
+                    if diff and not quiet:
+                        from difflib import unified_diff
+                        diff_lines = unified_diff(
+                            original.splitlines(keepends=True),
+                            cleaned.splitlines(keepends=True),
+                            fromfile=str(file),
+                            tofile=str(file)
+                        )
+                        console.print(''.join(diff_lines))
+                    if not check:
+                        with open(file, 'w', encoding='utf-8') as f:
+                            f.write(cleaned)
+            except Exception as e:
+                error_files.append((file, str(e)))
+                if not quiet:
+                    console.print(f"[red]Error processing {file}: {e}[/]")
+    if not quiet:
+        if modified_files:
+            status = "[yellow]would be modified[/]" if check else "[green]modified[/]"
+            console.print(f"\n{len(modified_files)} files {status}")
+            if verbose:
+                for file in modified_files:
+                    console.print(f"  {file}")
+        if error_files:
+            console.print(f"\n[red]{len(error_files)} files had errors[/]")
+            if verbose:
+                for file, error in error_files:
+                    console.print(f"  {file}: {error}")
+        if not modified_files and not error_files:
+            console.print("\n[green]All files are correctly formatted![/]")
+    if check and modified_files:
+        sys.exit(1)
+
+@cli.command()
+def init():
+    """Create a default configuration file."""
+    config_file = Path(".rigby.toml")
+    if config_file.exists():
+        console.print("[red]Configuration file already exists![/]")
+        sys.exit(1)
+    config = RigbyConfig()
+    import tomli_w
+    with open(config_file, "wb") as f:
+        tomli_w.dump({
+            "lines_between_functions": config.lines_between_functions,
+            "lines_between_classes": config.lines_between_classes,
+            "preserve_docstring_spacing": config.preserve_docstring_spacing,
+            "exclude_patterns": config.exclude_patterns,
+            "sort_methods": config.sort_methods
+        }, f)
+    console.print(Panel.fit(
+        "[green]Configuration file created![/]\n\n"
+        "Edit .rigby.toml to customize formatting rules.\n"
+        "You can also add settings to pyproject.toml under [tool.rigby].",
+        title="Rigby Configuration"
+    ))
 
 def main():
-    """Entry point for the CLI."""
+    """Main entry point for the CLI."""
     cli()
