@@ -1,6 +1,6 @@
 # rigby
 
-<img src="images/rigby.webp" alt="Rigby" width="200"/>
+<img src="https://raw.githubusercontent.com/lothartj/rigby/main/images/rigby.webp" alt="Rigby" width="200"/>
 
 https://pypi.org/project/rigby/
 
