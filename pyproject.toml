@@ -50,3 +50,23 @@ lines_between_classes = 2
 preserve_docstring_spacing = true
 exclude_patterns = ["venv/*", ".git/*", "__pycache__/*"]
 sort_methods = false
+
+# Import sorting configuration
+sort_imports = true
+lines_between_import_groups = 1
+
+[[tool.rigby.import_groups]]
+name = "future"
+patterns = ["__future__"]
+
+[[tool.rigby.import_groups]]
+name = "standard_library"
+patterns = ["typing", "pathlib", "os", "sys", "*"]
+
+[[tool.rigby.import_groups]]
+name = "third_party"
+patterns = ["click.*", "rich.*", "pydantic.*", "loguru.*"]
+
+[[tool.rigby.import_groups]]
+name = "local"
+patterns = ["rigby.*"]

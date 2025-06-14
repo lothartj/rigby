@@ -1,0 +1,8 @@
+- id: rigby
+  name: rigby
+  description: "Clean Python files by managing empty lines"
+  entry: rigby
+  language: python
+  types: [python]
+  args: ["run"]
+  require_serial: true 

@@ -4,6 +4,12 @@ from pathlib import Path
 from typing import List, Optional
 import tomli
 from pydantic import BaseModel, Field
+
+class ImportGroup(BaseModel):
+    """Configuration for import groups."""
+    name: str = Field(description="Name of the import group")
+    patterns: List[str] = Field(description="Patterns to match imports for this group")
+
 class RigbyConfig(BaseModel):
     """Configuration settings for rigby."""
     lines_between_functions: int = Field(default=1, description="Number of empty lines between functions")
@@ -14,6 +20,20 @@ class RigbyConfig(BaseModel):
         description="Glob patterns for files to exclude"
     )
     sort_methods: bool = Field(default=False, description="Whether to sort class methods alphabetically")
+    
+    # Import handling
+    sort_imports: bool = Field(default=True, description="Whether to sort and group imports")
+    import_groups: List[ImportGroup] = Field(
+        default=[
+            ImportGroup(name="future", patterns=["__future__"]),
+            ImportGroup(name="standard_library", patterns=["typing", "pathlib", "os", "sys", "*"]),
+            ImportGroup(name="third_party", patterns=["click.*", "rich.*", "pydantic.*", "loguru.*"]),
+            ImportGroup(name="local", patterns=["rigby.*"]),
+        ],
+        description="Groups for organizing imports"
+    )
+    lines_between_import_groups: int = Field(default=1, description="Number of empty lines between import groups")
+
     @classmethod
     def from_file(cls, config_path: Optional[Path] = None) -> "RigbyConfig":
         """Load configuration from a TOML file."""
