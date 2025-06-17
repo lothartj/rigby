@@ -5,9 +5,9 @@
 https://pypi.org/project/rigby/
 
 A Python tool to clean up Python files by managing empty lines, with a focus on:
-- Removing ALL empty lines within functions and classes
-- Maintaining exactly one empty line between functions
-- Maintaining exactly two empty lines between classes
+- Removing ALL empty lines within functions and classes.
+- Maintaining exactly one empty line between functions.
+- Maintaining exactly two empty lines between classes.
 
 ## Installation
 
