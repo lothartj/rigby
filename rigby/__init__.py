@@ -3,9 +3,9 @@ import atexit
 import os
 from pathlib import Path
 from .core import clean_file, clean_source
-from .display import show_installation_complete
+from .display import show_installation_complete, show_cleaning_complete
 __version__ = "0.1.0"
-__all__ = ["clean_file", "clean_source"]
+__all__ = ["clean_file", "clean_source", "show_cleaning_complete"]
 INSTALL_MARKER = Path(__file__).parent / ".installed"
 if not INSTALL_MARKER.exists():
     show_installation_complete()

@@ -2,6 +2,7 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
+from typing import List
 
 DRAGON_ASCII = """
                  /\\    .-\" /
@@ -37,7 +38,7 @@ def show_installation_complete():
     ))
     console.print()
 
-def show_cleaning_complete(cleaned_files: list[str]):
+def show_cleaning_complete(cleaned_files: List[str]):
     """Show a colorful completion message with cleaned files."""
     console.print()
     files_text = "\n".join([f"[green]✓[/] [cyan]{file}[/]" for file in cleaned_files])

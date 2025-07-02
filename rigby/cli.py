@@ -8,12 +8,16 @@ from rich.console import Console
 from rich.panel import Panel
 from .core import clean_file, clean_source
 from .config import RigbyConfig
+from .display import show_cleaning_complete
+
 console = Console()
+
 @click.group()
 @click.version_option()
 def cli():
     """Rigby - A Python code formatter focused on empty line management."""
     pass
+
 @cli.command()
 @click.argument('paths', nargs=-1, type=click.Path(exists=True))
 @click.option('--config', type=click.Path(exists=True, dir_okay=False),
@@ -49,7 +53,7 @@ def run(paths: List[str], config: Optional[str], check: bool,
                     original = f.read()
                 cleaned = clean_source(original, config_obj)
                 if original != cleaned:
-                    modified_files.append(file)
+                    modified_files.append(str(file))
                     if diff and not quiet:
                         from difflib import unified_diff
                         diff_lines = unified_diff(
@@ -68,11 +72,13 @@ def run(paths: List[str], config: Optional[str], check: bool,
                     console.print(f"[red]Error processing {file}: {e}[/]")
     if not quiet:
         if modified_files:
-            status = "[yellow]would be modified[/]" if check else "[green]modified[/]"
-            console.print(f"\n{len(modified_files)} files {status}")
-            if verbose:
-                for file in modified_files:
-                    console.print(f"  {file}")
+            if check:
+                console.print(f"\n[yellow]{len(modified_files)} files would be modified[/]")
+                if verbose:
+                    for file in modified_files:
+                        console.print(f"  {file}")
+            else:
+                show_cleaning_complete(modified_files)
         if error_files:
             console.print(f"\n[red]{len(error_files)} files had errors[/]")
             if verbose:
