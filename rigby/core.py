@@ -12,8 +12,6 @@ def clean_source(source: str, config: RigbyConfig = None) -> str:
     """Clean source code by managing empty lines according to configuration."""
     if config is None:
         config = RigbyConfig()
-
-    # First sort and format imports
     source = sort_and_format_imports(source, config)
         
     tree = ast.parse(source)

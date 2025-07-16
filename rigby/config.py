@@ -20,8 +20,6 @@ class RigbyConfig(BaseModel):
         description="Glob patterns for files to exclude"
     )
     sort_methods: bool = Field(default=False, description="Whether to sort class methods alphabetically")
-    
-    # Import handling
     sort_imports: bool = Field(default=True, description="Whether to sort and group imports")
     import_groups: List[ImportGroup] = Field(
         default=[

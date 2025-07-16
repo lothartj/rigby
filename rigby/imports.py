@@ -59,10 +59,8 @@ def group_imports(imports: List[Import], config: RigbyConfig) -> Dict[str, List[
                 assigned = True
                 break
         if not assigned:
-            # Default to standard library if no match
             groups["standard_library"].append(imp)
     
-    # Sort imports within each group
     for group in groups.values():
         group.sort(key=lambda x: (x.module, x.names))
     
@@ -82,8 +80,6 @@ def sort_and_format_imports(source: str, config: RigbyConfig) -> str:
     
     tree = ast.parse(source)
     imports = get_imports(tree)
-    
-    # Find the range of lines containing imports
     if not imports:
         return source
         
@@ -91,22 +87,14 @@ def sort_and_format_imports(source: str, config: RigbyConfig) -> str:
     for imp in imports:
         for i in range(imp.lineno - 1, imp.end_lineno):
             import_lines.add(i)
-    
-    # Group and format imports
     grouped_imports = group_imports(imports, config)
-    
-    # Build the new import section
     new_imports = []
     for group_name, group_imports in grouped_imports.items():
         if group_imports:
             new_imports.extend(format_import(imp) for imp in group_imports)
-            new_imports.append("")  # Empty line between groups
-    
-    # Remove the last empty line if present
+            new_imports.append("")
     if new_imports and not new_imports[-1]:
         new_imports.pop()
-    
-    # Replace the original import section
     lines = source.splitlines()
     min_line = min(import_lines)
     max_line = max(import_lines)
