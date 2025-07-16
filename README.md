@@ -25,13 +25,10 @@ You can use rigby either as a command-line tool or as a library in your Python c
 ### Command Line Usage
 
 ```bash
-# Clean a single file
 rigby run file.py
 
-# Clean multiple files
 rigby run file1.py file2.py
 
-# Clean all Python files in a directory
 rigby run .
 ```
 
@@ -40,10 +37,8 @@ rigby run .
 ```python
 from rigby import clean_file, clean_source
 
-# Clean a single file
 clean_file("path/to/your/file.py")
 
-# Clean source code directly
 source = '''
 class MyClass:
 
@@ -56,7 +51,7 @@ class MyClass:
     def bar():
         print("bar")
 '''
-cleaned = clean_source(source)  # Will remove empty lines within functions and format properly
+cleaned = clean_source(source)
 ```
 
 ## Features
