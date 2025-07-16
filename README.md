@@ -47,7 +47,6 @@ class MyClass:
 
         print("world")
 
-
     def bar():
         print("bar")
 '''
