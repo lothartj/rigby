@@ -1,28 +1,31 @@
 # rigby
 
+<div align="center">
 <img src="https://raw.githubusercontent.com/lothartj/rigby/main/images/rigby.webp" alt="Rigby" width="200"/>
 
-https://pypi.org/project/rigby/
+[![PyPI version](https://badge.fury.io/py/rigby.svg)](https://badge.fury.io/py/rigby)
+[![Python Versions](https://img.shields.io/pypi/pyversions/rigby.svg)](https://pypi.org/project/rigby/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+</div>
 
-A Python tool to clean up Python files by managing empty lines, with a focus on:
-- Removing ALL empty lines within functions and classes.
-- Maintaining exactly one empty line between functions.
-- Maintaining exactly two empty lines between classes.
+## Overview
+
+Rigby is a Python code formatter focused on managing empty lines to improve code readability. It follows a strict set of rules:
+
+- ✨ Removes ALL empty lines within functions and classes
+- 🔄 Maintains exactly one empty line between functions
+- 🎯 Maintains exactly two empty lines between classes
+- 🛡️ Preserves code functionality while cleaning
 
 ## Installation
 
-Simply run:
 ```bash
 pip install rigby
 ```
 
-That's it! All dependencies will be automatically installed.
+## Quick Start
 
-## Usage
-
-You can use rigby either as a command-line tool or as a library in your Python code.
-
-### Command Line Usage
+### Command Line
 
 ```bash
 rigby run file.py
@@ -32,7 +35,7 @@ rigby run file1.py file2.py
 rigby run .
 ```
 
-### Python Usage
+### Python API
 
 ```python
 from rigby import clean_file, clean_source
@@ -53,28 +56,73 @@ class MyClass:
 cleaned = clean_source(source)
 ```
 
+## Before and After
+
+```python
+class MyClass:
+
+    def method1(self):
+        x = 1
+
+        y = 2
+
+        return x + y
+
+
+    def method2(self):
+        return True
+
+class MyClass:
+    def method1(self):
+        x = 1
+        y = 2
+        return x + y
+
+    def method2(self):
+        return True
+```
+
 ## Features
 
-- Removes ALL empty lines within functions and classes
-- Maintains exactly one empty line between functions
-- Maintains exactly two empty lines between classes
-- Preserves code functionality while cleaning up spacing
-- Supports both single file and directory processing
-- Can be used as a CLI tool or Python library
+- 🧹 **Smart Cleanup**: Intelligently removes unnecessary empty lines while preserving code structure
+- 🔍 **Selective Processing**: Format single files or entire directories
+- 🛠️ **Dual Interface**: Use as a CLI tool or Python library
+- ⚡ **Fast Processing**: Efficient parsing and formatting
+- 🔒 **Safe Changes**: Preserves code functionality
+
+## Configuration
+
+No configuration needed! Rigby follows strict formatting rules to ensure consistency across all Python files.
 
 ## Dependencies
 
-All of these will be installed automatically when you install the package:
-- click>=8.0.0 - For command line interface
-- loguru>=0.7.0 - For logging
-- pydantic>=2.0.0 - For data validation
-- typing-extensions>=4.0.0 - For type hints
-- rich>=13.0.0 - For beautiful terminal output
+| Package | Version | Purpose |
+|---------|---------|---------|
+| click | >=8.0.0 | Command line interface |
+| loguru | >=0.7.0 | Logging functionality |
+| pydantic | >=2.0.0 | Data validation |
+| typing-extensions | >=4.0.0 | Type hints |
+| rich | >=13.0.0 | Terminal output formatting |
+
+## Development
+
+```bash
+git clone https://github.com/lothartj/rigby.git
+cd rigby
+
+pip install -e .
+
+pytest
+
+python -m build
+
+python -m twine upload dist/*
+```
 
 ## License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-rm -rf dist/ && python3 -m build
-python3 -m twine upload dist/*
-pip uninstall -y rigby && pip install --no-cache-dir rigby
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
